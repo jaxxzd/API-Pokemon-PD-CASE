@@ -1,6 +1,8 @@
+// Cores de cada tipo de pokémon guardados em um objeto
+
 const tipoCor = {
     bug: "#26de81",
-    dragon: "#ffeaa7",
+    dragon: "#721c11ff",
     electric: "#fed330",
     fairy: "#FF0069",
     fighting: "#30336b",
@@ -58,7 +60,7 @@ function gerarCardPokemon(data) {
     const statusDefesa = data.stats[2].base_stat;
     const statusVelocidade = data.stats[5].base_stat;
 
-    // Colocando cores no fundo do card com base no tipo do pokémon
+    //  do card com base no tipo do pokémon
 
     const fundoCor = tipoCor[data.types[0].type.name];
 
@@ -99,6 +101,9 @@ function gerarCardPokemon(data) {
     // Função chamada pra mostrar os tipos do pokémon
 
     TypesPokemon(data.types);
+
+    // Função chamada para mudar a cor do card e dos tipos do pokémon
+
     corCard(fundoCor)
 };
 
@@ -112,10 +117,12 @@ const TypesPokemon = types => {
     });
 }
 
+// função corCard com parâmetro "cor", que faz a alteração do CSS com JavaScript, definindo um círculo central no topo do card, usando o parâmetro "cor" para receber da variável "fundoCor" a cor do fundo do card, então o card pega os elementos ".types" e "span", esse comando pega todos os spans que selecionam os tipos do pokémon e por fim, o "forEach" com o parâmetro "TipoCor" percorre todos os spans e coloca o background color do tipo do pokémon
+
 let corCard = cor => {
     card.style.background = `radial-gradient(circle at 50% 0%, ${cor} 36%, #FFFFFF 0%)`
-    card.querySelectorAll(".types span").forEach((TypeColor) => {
-        TypeColor.style.backgroundColor = cor;
+    card.querySelectorAll(".types span").forEach((TipoCor) => {
+        TipoCor.style.backgroundColor = cor;
     })
 }
 
