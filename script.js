@@ -140,7 +140,7 @@ btnBuscar.addEventListener("click", (e) => {
         return
     }
 
-    // a função "buscarPokemon" aguarda por um valor que está dentro da variável "value", que será retirada na digitação do input e do clique do botão para 
+    // a função "buscarPokemon" aguarda por um valor que está dentro da variável "value", que será retirada na digitação do input + clique do botão para buscar o pokémon digitado por nome ou id
 
     buscarPokemon(value)
 
