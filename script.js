@@ -42,20 +42,42 @@ const tipoIcone = {
 
 };
 
-// EXEMPLO — depois você liga ao seu código da API
+// função para procurar o icon de acordo com o tipo do pokémon
+
 function pokedexIcon(tipos) {
+
+    // criação da variável container recebendo como valor um documento HTML com classe ID, onde esse documento HTML está localizado dinamicamente no JavaScript
+
     const container = document.getElementById("tipo-container");
-    container.innerHTML = ""; // limpa
+
+    // Limpeza do container para receber novos icons e spans
+
+    container.innerHTML = "";
+
+    // o parâmetro "tipos" percorre com o "ForEach" usando como parâmetro "tipo"
 
     tipos.forEach(tipo => {
+
+        // criação da variável constante "span" e recebe como resultado uma criação de um elemento "span" no documento feito pelo JavaScript
+
         const span = document.createElement("span");
+
+        // esse documento que está armazenado na variável constante "span", recebe uma classe chamada "badge-tipo"
+
         span.className = "badge-tipo";
+
+        // a variável constante recebe um estilo de background com base no tipo do pokémon que recebeu como valor pelo parãmetro "tipos"
+
         span.style.background = tipoCor[tipo];
+
+        // a variável faz a transformação no documento HTML criando o icone, seguido por um objeto onde armazena o nome do tipo e a imagem, que faz a busca por um valor, que é o  nome do tipo do pokémon vindo pelo parâmetro "tipo", o alt também recebe o nome do tipo e então cria uma tag "p" para declarar este nome em um formato de texto
 
         span.innerHTML = `
             <img src="${tipoIcone[tipo]}" alt="${tipo}">
-            ${tipo}
+            <p>${tipo}</p>
         `;
+
+        // Aqui, a variável "container" que está armazenando a tag div com a classe "tipo-container", adiciona a variável constante "span" como seu elemento filho
 
         container.appendChild(span);
     });
@@ -103,13 +125,25 @@ async function pegarIdPokemon() {
     gerarCardPokemon(data);
 }
 
-//  Botão para executar a ação de busca por um pokémon por nome ou id
+//  Botão para executar a ação de busca por um pokémon por nome ou id, que tem uma função de executar um evento de clique, junto a um paraâemtro chamado "e" que seria "erro" com uma arrow function com escopo
 
-input.value = "";
+btnBuscar.addEventListener("click", (e) => {
 
-btnBuscar.addEventListener("click", () => {
-    const value = input.value.toLowerCase().trim();
+    // definimos o valor para a variável "value" como um valor para a variável input com função "trim()" para tirar espaços desnecessários e ".toLowerCase()" para deixar o valor minúsculo (a API precisa que seja assim, porque ela armazena os nomes dos pokémons em letras minúsculas no banco de dados)
+
+    const value = input.value.trim().toLowerCase();
+
+    // Aqui é feito um controle de decisão que faz a seguinte pergunta "se o valor do input sem espaços desnecessários for idêntico a vazio" então coloque uma alerta na tela, pedindo pro usuário colocar um valor válido para o nome e id do pokémon, se cair nessa condição o "return" impede do código continuar.
+
+    if(input.value.trim() === "") {
+        alert("Digite um valor válido");
+        return
+    }
+
+    // a função "buscarPokemon" aguarda por um valor que está dentro da variável "value", que será retirada na digitação do input e do clique do botão para 
+
     buscarPokemon(value)
+
 })
 
 // Um evento de clique para gerar o card do pokemon
@@ -181,6 +215,8 @@ function gerarCardPokemon(data) {
 
     corCard(fundoCor)
 
+    //  mapeamento em busco do tipo do pokémon para receber o valor por parâmetro
+
     pokedexIcon(data.types.map(t => t.type.name));
 };
 
@@ -193,15 +229,27 @@ let corCard = cor => {
     })
 }
 
-
+// função assíncrona com parâmetro "value", que busca o pokémon pelo input de texto (forma de busca pelos pokémons padronizadas pela API)
 
 async function buscarPokemon(value) {
 
+    // temos uma função de controle de fluxo pra evitar problemas no código, usado somente o try e catch
+
     try {
+
+        // recebendo como resposta a requisição da PokéAPI para a função "buscarPokemon", onde usa uma palavra-chave das funções async, chamado "await", seguindo pela API do JavaScript chamada "fetch", para lidar com as requisições
+
         const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
 
+        // Uma condição simples perguntando "se a reposta não for ok" então estilize o background do card para a cor "eeededde 0%", em sequência transforme o card no documento HTML criando uma div, img e um texto para representar erro ao usuário, fazer a limpeza do input e retornar esse valor para a função
+
         if (!resp.ok) {
+
+            // estiliza o background do card para a cor "eeededde 0%"
+
             card.style.background = `#eeededde 0%`;
+
+            // transforma o card no documento HTML criando uma tag "div", "img" e um "p" para representar erro ao usuário
 
             card.innerHTML =
                 `<div id="erro-content">
@@ -209,28 +257,51 @@ async function buscarPokemon(value) {
                     <p class="no-found-pokemon"> Pokémon não identificado ⛌
                 </div>`;
 
+            // faz a limpeza do input
+
             input.value = "";
+
+            // retorna os valores para a função
+
             return
         }
 
+        // armazena na variável constante "data" a resposta da requisição convertida em json, tendo um "await" para esperar essa convernção ser realizada
+
         const data = await resp.json();
+
+        // função "gerarCardPokemon" recebe como parâmetro o valor de "data"
+
         gerarCardPokemon(data);
 
+        // limpeza do input
+
         input.value = "";
+
     }
 
 
+    // função com controle de fluxo  para "pegar" o erro, se cair nessa função ela executa:
+
     catch (error) {
+
+        // estliza o background do card com a cor "#eeededde 0%"
 
         card.style.background = `#eeededde 0%`;
 
+        // estiliza a largura do card para "250px"
+
         card.style.width = `250px`;
+
+        // Cria tag "div", "img" e "p" para o card no documento HTML, para representar erro ao usuário
 
         card.innerHTML =
             `<div id="erro-content">
                 <img src="img/erro.png" class="erro-img">
                 <p class="no-found-pokemon"> Não encontrado :(
                 </div>`;
+
+        // limpeza do input
 
         input.value = "";
 
