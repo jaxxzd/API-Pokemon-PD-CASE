@@ -1,3 +1,7 @@
+// Aramazenado a url da api em uma variável constante
+
+const url = "https://pokeapi.co/api/v2/pokemon/";
+
 // card onde se encontra as informações do Pokémon
 
 const card = document.querySelector("#card");
@@ -93,9 +97,6 @@ function pokedexIcon(tipos) {
     });
 }
 
-// Aramazenado a url da api em uma variável constante
-
-const url = "https://pokeapi.co/api/v2/pokemon/";
 
 // Gerando um número aleatório entre 1 e 500
 
