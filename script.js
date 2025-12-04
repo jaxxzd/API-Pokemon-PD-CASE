@@ -24,6 +24,8 @@ const next = document.querySelector(".button-next");
 let searchPokemon = 1;
 let maxPokemon = 1025;
 
+// cores do tipo do pokémon
+
 const tipoCor = {
     bug: "#A8B820", dragon: "#7038F8", electric: "#F8D030",
     fairy: "#EE99AC", fighting: "#C03028", fire: "#F08030",
@@ -34,6 +36,7 @@ const tipoCor = {
 };
 
 // Ícones oficiais estilo Pokédex (SVG minimalista)
+
 const tipoIcone = {
     fire: "https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/fire.svg",
     water: "https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/water.svg",
@@ -98,7 +101,7 @@ function pokedexIcon(tipos) {
 }
 
 
-// Gerando um número aleatório entre 1 e 500
+// Gerando um número aleatório entre 1 e 1025
 
 async function pegarIdPokemon() {
     let id = Math.floor(Math.random() * 1025) + 1;
@@ -130,7 +133,7 @@ function gerarCardPokemon(data) {
     const statusDefesa = data.stats[2].base_stat;
     const statusVelocidade = data.stats[5].base_stat;
 
-    //  cor do card com base no tipo do pokémon, pegando o objeto com as cores "TipoCor" e pegando o array "types" no json da API com o parâmetro "data", pegando o primeiro tipo do pokémon com "[0]", presente no json da API, para definir a cor do círculo do card e por fim pegando o nome do tipo com "type.name"
+    //  cor do card com base no tipo do pokémon, pegando o objeto com as cores "TipoCor" e pegando o array "types" no json da API com o parâmetro "data", pegando o primeiro tipo do pokémon com "[0]", presente no json convertido, para definir a cor do círculo do card e por fim pegando o nome do tipo com "type.name"
 
     const fundoCor = tipoCor[data.types[0].type.name];
 
@@ -180,22 +183,23 @@ function gerarCardPokemon(data) {
     //  mapeamento em busco do tipo do pokémon para receber o valor por parâmetro
 
     pokedexIcon(data.types.map(t => t.type.name));
+
 };
 
-// função corCard com parâmetro "cor", que faz a alteração do CSS com JavaScript, definindo um círculo central no topo do card, usando o parâmetro "cor" para receber da variável "fundoCor" a cor do fundo do card, então o card pega os elementos ".types" e "span", esse comando pega todos os spans que selecionam os tipos do pokémon e por fim, o "forEach" com o parâmetro "TipoCor" percorre todos os spans e coloca o background color do tipo do pokémon
+// função corCard com parâmetro "cor", que faz a alteração do CSS com JavaScript, definindo um círculo central no topo do card, usando o parâmetro "cor" para receber da variável "fundoCor" a cor do fundo do card a partir do seu tipo, então o card pega os elementos "#tipo-container" e "span", esse comando pega todos os spans que selecionam os tipos do pokémon e por fim, o "forEach" com o parâmetro "TipoCor" percorre todos os spans e coloca o background color do tipo do pokémon
 
 let corCard = cor => {
     card.style.background = `radial-gradient(circle at 50% 0%, ${cor} 45%, #eeededde 0%)`
     card.querySelectorAll("#tipo-container span").forEach((TipoCor) => {
         TipoCor.style.backgroundColor = cor;
-    })
+    });
 }
 
 // variável "input" recebe um evento de "keyup" com o parâmetro da arrow function chamando "event"
 
 input.addEventListener("keyup", (event) => {
 
-    // nesse controle se o evento de clique no teclado for igual a tecla "Enter", então cria uma variável chamada "value" recebendo o valor do input digitado, retirando os espaços desnecessários
+    // nesse controle se o evento de clique no teclado for igual a tecla "Enter", então cria uma variável chamada "value" recebendo o valor do input digitado, retirando os espaços desnecessários e colocando em minúsculo, pois a API exige para encontrar os nomes dos pokémons que estão em minúsculo no banco de dados
 
     if (event.key === "Enter") {
         const value = input.value.trim().toLowerCase();
@@ -226,7 +230,7 @@ async function buscarPokemon(value) {
 
         const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
 
-        // Uma condição simples perguntando "se a reposta não for ok" então estilize o background do card para a cor "eeededde 0%", em sequência transforme o card no documento HTML criando uma div, img e um texto para representar erro ao usuário, fazer a limpeza do input e retornar esse valor para a função
+        // Uma condição simples perguntando "se a reposta não for ok" então estilize o background do card para a cor "eeededde 0%", em sequência transforme o card no documento HTML criando uma div, img e texto para representar erro ao usuário, fazer a limpeza do input e retorna pra impedir a leitura do código restante
 
         if (!resp.ok) {
 
@@ -251,7 +255,7 @@ async function buscarPokemon(value) {
             return
         }
 
-        // armazena na variável constante "data" a resposta da requisição convertida em json, tendo um "await" para esperar essa conversão ser realizada
+        // armazena na variável constante "data" a resposta da requisição convertida em json, tendo um "await" para esperar essa conversão ser realizada para carregar os dados corretamente
 
         const data = await resp.json();
 
@@ -259,7 +263,7 @@ async function buscarPokemon(value) {
 
         searchPokemon = data.id;
 
-        // função "gerarCardPokemon" recebe como parâmetro o valor de "data"
+        // função "gerarCardPokemon" recebe como parâmetro o valor de "data" para gerar o card do pokémon que foi buscado pelo seu nome ou id no input de texto
 
         gerarCardPokemon(data);
 
@@ -301,6 +305,8 @@ async function BuscarIdCarrosel(id) {
 
     const resp = await fetch(url + id);
 
+    // forma de controle de fluxo para evitar erro se a resposta não for certa
+
     if (!resp.ok) {
         // estliza o background do card com a cor "#eeededde 0%"
 
@@ -318,7 +324,10 @@ async function BuscarIdCarrosel(id) {
 
         input.value = "";
     } else {
-        // Aqui a variável data recebe essa resposta que está armazenada na variável "resp", com a conversão em json, fazendo com que o processo de carregamento seja efeito primeiro, pra depois continuar a leitura do código
+
+        // se não cair no erro, o fluxo é executado normalmente
+
+        // Aqui a variável data recebe essa resposta que está armazenada na variável "resp", com a conversão em json, fazendo com que o processo de carregamento seja feito primeiro, pra depois continuar a leitura do código
 
         const data = await resp.json();
 
@@ -326,7 +335,7 @@ async function BuscarIdCarrosel(id) {
 
         gerarCardPokemon(data);
 
-        // o controle do id do pokémon recebe o número exato do id do pokémon de acordo com número gerado aleatoriamente quanto o valor digitado no input, o id (pego na função "pegarIdPokemon") ou o valor (pego na função buscarPokemon) é colocado no parâmetro da função "buscarIdCarrosel"
+        // o controle do id do pokémon recebe o número exato do id do pokémon de acordo com número gerado aleatoriamente quanto o valor digitado no input, o id (pego na função "pegarIdPokemon") é colocado no parâmetro da função "buscarIdCarrosel", enquanto existe essa mesma estrutra na função "buscarPokemon", para que a função de "next" e "prev", seja realizada com base no id procurado e gerado
 
         searchPokemon = data.id;
     }
