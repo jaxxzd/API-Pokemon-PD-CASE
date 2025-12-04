@@ -1,22 +1,32 @@
+// card onde se encontra as informações do Pokémon
+
+const card = document.querySelector("#card");
+
+// botão para gerar um pokémon aleatório, utilizando a função "addEventListener" para executar uma função ao clicar e "pegarIdPokemon" para receceber um número aleatório do id do pokémon, depois, pega a resposta da requisição com a espera da API "fetch" com a soma da url da PokéAPI com o número aleatório chamado "id", então a variável constante "data" espera a conversão da resposta da requisição para json e por fim gera o card com a chamada da função gerarCardPokemon com o parâmetro "data"
+
+const btnGerar = document.querySelector(".btn-gerar");
+
+// input de busca por nome do pokémon ou id
+
+const input = document.querySelector("#input-buscar-pokemon");
+
+// botões anterior e próximo
+
+const prev = document.querySelector(".button-prev");
+const next = document.querySelector(".button-next");
+
+// uma forma de controlar a sequência de pokémons para o carrosel
+
+let searchPokemon = 1;
+let maxPokemon = 1025;
+
 const tipoCor = {
-    bug: "#A8B820",
-    dragon: "#7038F8",
-    electric: "#F8D030",
-    fairy: "#EE99AC",
-    fighting: "#C03028",
-    fire: "#F08030",
-    flying: "#A890F0",
-    grass: "#78C850",
-    ground: "#E0C068",
-    ghost: "#705898",
-    ice: "#98D8D8",
-    normal: "#A8A878",
-    poison: "#A040A0",
-    psychic: "#F85888",
-    rock: "#B8A038",
-    water: "#6890F0",
-    dark: "#705848",
-    steel: "#B8B8D0",
+    bug: "#A8B820", dragon: "#7038F8", electric: "#F8D030",
+    fairy: "#EE99AC", fighting: "#C03028", fire: "#F08030",
+    flying: "#A890F0", grass: "#78C850", ground: "#E0C068",
+    ghost: "#705898", ice: "#98D8D8", normal: "#A8A878",
+    poison: "#A040A0", psychic: "#F85888", rock: "#B8A038",
+    water: "#6890F0", dark: "#705848", steel: "#B8B8D0",
 };
 
 // Ícones oficiais estilo Pokédex (SVG minimalista)
@@ -87,64 +97,15 @@ function pokedexIcon(tipos) {
 
 const url = "https://pokeapi.co/api/v2/pokemon/";
 
-// Integração de elementos do HTML com o JS
-
-// card onde se encontra as informações do Pokémon
-
-const card = document.querySelector("#card");
-
-// botão para gerar um pokémon aleatório, utilizando a função "addEventListener" para executar uma função ao clicar e "pegarIdPokemon" para receceber um número aleatório do id do pokémon, depois, pega a resposta da requisição com a espera da API "fetch" com a soma da url da PokéAPI com o número aleatório chamado "id", então a variável constante "data" espera a converção da resposta da requisição para json e por fim gera o card
-
-const btnGerar = document.querySelector(".btn-gerar");
-
-// input de busca por nome do pokémon ou id
-
-const input = document.querySelector("#input-buscar-pokemon");
-
-// botão para buscar o pokémon por nome ou id através de um adição de evento
-
-const btnBuscar = document.querySelector(".btn-buscar");
-
 // Gerando um número aleatório entre 1 e 500
 
 async function pegarIdPokemon() {
-    let id = Math.floor(Math.random() * 1000) + 1;
+    let id = Math.floor(Math.random() * 1025) + 1;
 
-    // definindo para a variável "resp" a espera com o fetch somado à url + id, para processar a requisição e id.
+    // a função "buscarIdCarrosel" recebe um valor aleatório pra representar o id do pokémon no seu parâmetro
 
-    const resp = await fetch(url + id);
-
-    // na variável "data" temos a resposta da requisição que está sendo convertida em JSON
-
-    const data = await resp.json();
-
-    card.style.width = `100%`;
-
-    // Chamando a função "gerarCardPokemon" com os dados do "data" para servir como valor para o parâmetro da função e gerar as características do pokémon.
-
-    gerarCardPokemon(data);
+    BuscarIdCarrosel(id);
 }
-
-//  Botão para executar a ação de busca por um pokémon por nome ou id, que tem uma função de executar um evento de clique, junto a um paraâemtro chamado "e" que seria "erro" com uma arrow function com escopo
-
-btnBuscar.addEventListener("click", (e) => {
-
-    // definimos o valor para a variável "value" como um valor para a variável input com função "trim()" para tirar espaços desnecessários e ".toLowerCase()" para deixar o valor minúsculo (a API precisa que seja assim, porque ela armazena os nomes dos pokémons em letras minúsculas no banco de dados)
-
-    const value = input.value.trim().toLowerCase();
-
-    // Aqui é feito um controle de decisão que faz a seguinte pergunta "se o valor do input sem espaços desnecessários for idêntico a vazio" então coloque uma alerta na tela, pedindo pro usuário colocar um valor válido para o nome e id do pokémon, se cair nessa condição o "return" impede do código continuar.
-
-    if(input.value.trim() === "") {
-        alert("Digite um valor válido");
-        return
-    }
-
-    // a função "buscarPokemon" aguarda por um valor que está dentro da variável "value", que será retirada na digitação do input + clique do botão para buscar o pokémon digitado por nome ou id
-
-    buscarPokemon(value)
-
-})
 
 // Um evento de clique para gerar o card do pokemon
 
@@ -224,10 +185,33 @@ function gerarCardPokemon(data) {
 
 let corCard = cor => {
     card.style.background = `radial-gradient(circle at 50% 0%, ${cor} 45%, #eeededde 0%)`
-    card.querySelectorAll(".types span").forEach((TipoCor) => {
+    card.querySelectorAll("#tipo-container span").forEach((TipoCor) => {
         TipoCor.style.backgroundColor = cor;
     })
 }
+
+// variável "input" recebe um evento de "keyup" com o parâmetro da arrow function chamando "event"
+
+input.addEventListener("keyup", (event) => {
+
+    // nesse controle se o evento de clique no teclado for igual a tecla "Enter", então cria uma variável chamada "value" recebendo o valor do input digitado, retirando os espaços desnecessários
+
+    if (event.key === "Enter") {
+        const value = input.value.trim().toLowerCase();
+
+        // esse controle define se o valor for igual a vazio, coloca no console.log como "valor sem dados - não buscar", com a função "return" impedindo do código continuar, parando na hora.
+
+        if (value === "") {
+            console.log("valor sem dados - não buscar");
+            return
+        }
+
+        // chamada da função "buscarPokemon" trazendo o valor digitado no input para sua função executar ação
+
+        buscarPokemon(value)
+    }
+
+})
 
 // função assíncrona com parâmetro "value", que busca o pokémon pelo input de texto (forma de busca pelos pokémons padronizadas pela API)
 
@@ -261,14 +245,18 @@ async function buscarPokemon(value) {
 
             input.value = "";
 
-            // retorna os valores para a função
+            // retorna para impedir a leitura do código restante
 
             return
         }
 
-        // armazena na variável constante "data" a resposta da requisição convertida em json, tendo um "await" para esperar essa convernção ser realizada
+        // armazena na variável constante "data" a resposta da requisição convertida em json, tendo um "await" para esperar essa conversão ser realizada
 
         const data = await resp.json();
+
+        // variável "searchPokemon" que está servindo de controle para o id do pokémon para pegar os seus dados que foram digitados no input, que provavelmente não foi por ID, mas sim por nome, então é pego a variável data com a resposta convertida em json e pegamos o id do pokémon
+
+        searchPokemon = data.id;
 
         // função "gerarCardPokemon" recebe como parâmetro o valor de "data"
 
@@ -280,7 +268,6 @@ async function buscarPokemon(value) {
 
     }
 
-
     // função com controle de fluxo  para "pegar" o erro, se cair nessa função ela executa:
 
     catch (error) {
@@ -288,10 +275,6 @@ async function buscarPokemon(value) {
         // estliza o background do card com a cor "#eeededde 0%"
 
         card.style.background = `#eeededde 0%`;
-
-        // estiliza a largura do card para "250px"
-
-        card.style.width = `250px`;
 
         // Cria tag "div", "img" e "p" para o card no documento HTML, para representar erro ao usuário
 
@@ -309,5 +292,58 @@ async function buscarPokemon(value) {
 
 }
 
+// criação de uma função para buscar o Id do pokémon com parâmetro "id"
 
+async function BuscarIdCarrosel(id) {
 
+    // carregamento da resposta com a API "fetch" pegando valores da "url" da pokeAPI + o id que foi pego na função "pegarIdPokemon" quanto a valor digitado na função "buscarPokemon", sendo essa resposta armazenada na variável "resp"
+
+    const resp = await fetch(url + id);
+
+    if (!resp.ok) {
+        // estliza o background do card com a cor "#eeededde 0%"
+
+        card.style.background = `#eeededde 0%`;
+
+        // Cria tag "div", "img" e "p" para o card no documento HTML, para representar erro ao usuário
+
+        card.innerHTML =
+            `<div id="erro-content">
+                <img src="img/erro.png" class="erro-img">
+                <p class="no-found-pokemon"> Não encontrado :(
+                </div>`;
+
+        // limpeza do input
+
+        input.value = "";
+    } else {
+        // Aqui a variável data recebe essa resposta que está armazenada na variável "resp", com a conversão em json, fazendo com que o processo de carregamento seja efeito primeiro, pra depois continuar a leitura do código
+
+        const data = await resp.json();
+
+        // a função gerarCardPokemon pega os dados do pokémon e cria a estrutura HTML pra forma o card dinamicamente no JavaScript
+
+        gerarCardPokemon(data);
+
+        // o controle do id do pokémon recebe o número exato do id do pokémon de acordo com número gerado aleatoriamente quanto o valor digitado no input, o id (pego na função "pegarIdPokemon") ou o valor (pego na função buscarPokemon) é colocado no parâmetro da função "buscarIdCarrosel"
+
+        searchPokemon = data.id;
+    }
+
+}
+
+// para passar o card, foi criado um evento de clique que com base no id gerado no card passa para o próximo pokémon
+
+next.addEventListener("click", () => {
+    if (searchPokemon < maxPokemon) {
+        BuscarIdCarrosel(searchPokemon + 1);
+    }
+})
+
+// para voltar o card, foi criado uma condição, se o controle do id for maior que 1 então a função "buscarIdCarrosel" diminui -1 o seu controle para voltar o card
+
+prev.addEventListener("click", () => {
+    if (searchPokemon > 1) {
+        BuscarIdCarrosel(searchPokemon - 1);
+    }
+})

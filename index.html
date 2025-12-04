@@ -5,24 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="/img/favicon-pokeapi.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>PokéAPI</title>
 </head>
 
 <body>
-    <div id="container-card">
+    <main>
+        <button class="button-prev">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
 
-        <div id="input-busca">
-            <input type="text" placeholder="Buscar Pokémon" id="input-buscar-pokemon">
-            <button class="btn-buscar btn1">Buscar</button>
+        <div id="container-card">
+
+            <div id="input-busca">
+                <input type="text" placeholder="Buscar Pokémon" id="input-buscar-pokemon">
+            </div>
+
+            <div id="card">
+
+            </div>
+
+            <button class="btn-gerar btn">Gerar</button>
         </div>
 
-        <div id="card">
-
-        </div>
-
-        <button class="btn-gerar btn">Gerar</button>
-    </div>
-
+        <button class="button-next">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </main>
 
     <script src="script.js"></script>
 </body>
