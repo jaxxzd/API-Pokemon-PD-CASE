@@ -139,7 +139,7 @@ function gerarCardPokemon(data) {
         <div class="header-dados">
             <p class="poke-id">
                 <span>#</span>
-                ${String(id).padStart(4, "0")}
+                ${String(id).padStart(2, "0")}
             </p>
 
             <p class="poke-hp">

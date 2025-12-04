@@ -57,11 +57,11 @@ main {
 
 @media (min-width: 768px) {
     main {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    gap: 32px;
-}
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+    }
 }
 
 #container-card {
@@ -391,7 +391,8 @@ main {
     width: 180px;
 }
 
-.button-next, .button-prev {
+.button-next,
+.button-prev {
     background-color: #FFFFFF;
     border: none;
     outline: none;
